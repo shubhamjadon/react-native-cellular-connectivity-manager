@@ -8,15 +8,19 @@ This is used to get Status of Mobile Data irrespective of Wifi is on or not and 
 npm install react-native-cellular-connectivity-manager
 ```
 
+## Android
+
+In AndroidManifest.xml add following permission:
+
+```
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+```
+
+In build.gradle of app make sure to have minSdkVersion 26 or above
+
 ## Usage
 
-```js
-import { multiply } from 'react-native-cellular-connectivity-manager';
-
-// ...
-
-const result = await multiply(3, 7);
-```
+For usage see <i>example/App.tsx</i>
 
 ## Contributing
 

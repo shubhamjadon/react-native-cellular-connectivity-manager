@@ -1,4 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 const LINKING_ERROR =
   `The package 'react-native-cellular-connectivity-manager' doesn't seem to be linked. Make sure: \n\n` +
@@ -17,6 +17,16 @@ const CellularConnectivityManager = NativeModules.CellularConnectivityManager
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return CellularConnectivityManager.multiply(a, b);
+export function switchToCellularInternet() {
+  CellularConnectivityManager?.forceDataFlowThroughCellularNetwork?.();
 }
+
+export function switchToDefaultInternet() {
+  CellularConnectivityManager?.resetDataFlowToDefault?.();
+}
+
+export const MobileDataStatus = new NativeEventEmitter(
+  CellularConnectivityManager
+);
+
+export const MOBILE_DATA_STATUS_EVENT = 'MobileDataStatus';
