@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { StyleSheet, View, Text, Pressable } from 'react-native';
+import { StyleSheet, View, Text, Pressable, ToastAndroid } from 'react-native';
 import {
   MOBILE_DATA_STATUS_EVENT,
   MobileDataStatus,
@@ -14,6 +14,7 @@ export default function App() {
       MOBILE_DATA_STATUS_EVENT,
       (event: boolean) => {
         console.log('Is mobile data on:', event);
+        ToastAndroid.show(`Mobile Data is ${event ? 'ON' : 'OFF'}`, 1000);
       }
     );
 
