@@ -30,3 +30,13 @@ export const MobileDataStatus = new NativeEventEmitter(
 );
 
 export const MOBILE_DATA_STATUS_EVENT = 'MobileDataStatus';
+
+export function registerAirplaneModeListener() {
+  CellularConnectivityManager?.registerAirplaneModeListener?.();
+}
+
+export function unregisterAirplaneModeListener() {
+  CellularConnectivityManager?.unregisterAirplaneModeListener?.();
+}
+
+export const AIRPLANE_MODE_EVENT = 'EventAirplaneChange';

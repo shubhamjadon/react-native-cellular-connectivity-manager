@@ -2,15 +2,18 @@ import React, { useEffect } from 'react';
 
 import { StyleSheet, View, Text, Pressable, ToastAndroid } from 'react-native';
 import {
+  AIRPLANE_MODE_EVENT,
   MOBILE_DATA_STATUS_EVENT,
   MobileDataStatus,
+  registerAirplaneModeListener,
   switchToCellularInternet,
   switchToDefaultInternet,
+  unregisterAirplaneModeListener,
 } from 'react-native-cellular-connectivity-manager';
 
 export default function App() {
   useEffect(() => {
-    const listener = MobileDataStatus.addListener(
+    const mobileDataListener = MobileDataStatus.addListener(
       MOBILE_DATA_STATUS_EVENT,
       (event: boolean) => {
         console.log('Is mobile data on:', event);
@@ -18,7 +21,17 @@ export default function App() {
       }
     );
 
-    () => listener.remove();
+    const airplaneModeListener = MobileDataStatus.addListener(
+      AIRPLANE_MODE_EVENT,
+      (event: boolean) => {
+        console.log('Is airplane mode on:', event);
+      }
+    );
+
+    return () => {
+      mobileDataListener.remove();
+      airplaneModeListener.remove();
+    };
   }, []);
 
   return (
@@ -44,6 +57,27 @@ export default function App() {
           <Text style={styles.buttonText}>Switch To Default</Text>
         </Pressable>
       </View>
+      <View style={styles.row}>
+        <Pressable
+          onPress={registerAirplaneModeListener}
+          style={({ pressed }) => [
+            styles.button,
+            { opacity: pressed ? 0.5 : 1 },
+          ]}
+        >
+          <Text style={styles.buttonText}>RegisterAirplaneListener</Text>
+        </Pressable>
+        <Pressable
+          onPress={unregisterAirplaneModeListener}
+          style={({ pressed }) => [
+            styles.button,
+            styles.blackButton,
+            { opacity: pressed ? 0.5 : 1 },
+          ]}
+        >
+          <Text style={styles.buttonText}>UnregisterAirplaneListener</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -52,6 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    gap: 16,
   },
   row: {
     flexDirection: 'row',
