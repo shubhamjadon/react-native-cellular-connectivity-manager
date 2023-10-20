@@ -39,4 +39,9 @@ export function unregisterAirplaneModeListener() {
   CellularConnectivityManager?.unregisterAirplaneModeListener?.();
 }
 
+/** returns the airplane mode status */
+export function isAirplaneEnabled(): Promise<boolean> {
+  return CellularConnectivityManager?.isAirplaneEnabled?.();
+}
+
 export const AIRPLANE_MODE_EVENT = 'EventAirplaneChange';
