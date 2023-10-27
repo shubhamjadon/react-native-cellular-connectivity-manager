@@ -5,8 +5,10 @@
 @interface CellularConnectivityManager : NSObject <NativeCellularConnectivityManagerSpec>
 #else
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
-@interface CellularConnectivityManager : NSObject <RCTBridgeModule>
+@interface CellularConnectivityManager : RCTEventEmitter <RCTBridgeModule, CTTelephonyNetworkInfoDelegate>
 #endif
 
 @end

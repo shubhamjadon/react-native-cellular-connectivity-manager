@@ -1,17 +1,26 @@
 #import "CellularConnectivityManager.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
-@implementation CellularConnectivityManager
-RCT_EXPORT_MODULE()
+@interface CellularConnectivityManager ()
 
-@interface CellularConnectivityManagerDelegate : NSObject <CTTelephonyNetworkInfoDelegate>
-
-- (void)dataServiceIdentifierDidChange:(NSString *)identifier;
+@property (nonatomic, strong) CTTelephonyNetworkInfo *telephonyInfo;
 
 @end
 
-@property (nonatomic, strong) CellularConnectivityManagerDelegate *delegate;
+@implementation CellularConnectivityManager
+RCT_EXPORT_MODULE()
 
+- (NSArray<NSString *> *) supportedEvents{
+      return @[@"airplaneModeChanged"];
+}
+
+- (instancetype)init {
+      self = [super init];
+      if(self){
+            self.telephonyInfo = [[CTTelephonyNetworkInfo alloc ] init];
+            [self.telephonyInfo setDelegate:self];
+      }
+}
 
 RCT_EXPORT_METHOD(isAirplaneEnabled:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
       NSDictionary<NSString *,NSString *> * radio = [[CTTelephonyNetworkInfo alloc] init].serviceCurrentRadioAccessTechnology;
@@ -19,21 +28,17 @@ RCT_EXPORT_METHOD(isAirplaneEnabled:(RCTPromiseResolveBlock)resolve rejecter:(RC
       resolve([NSNumber numberWithBool:isEnabled]);
 }
 
-- (void)setDataServiceIdentifierDidChangeDelegate:(CellularConnectivityManagerDelegate *)delegate {
-    self.delegate = delegate;
-}
-
-@end
-
-@implementation CellularConnectivityManagerDelegate
-
 - (void)dataServiceIdentifierDidChange:(NSString *)identifier {
-  // Get the new radio access technology for the service.
-  CTRadioAccessTechnology RAT = [CTTelephonyNetworkInfo serviceCurrentRadioAccessTechnology:identifier];
+      NSString *currentRadioAccessTechnology = self.telephonyInfo.currentRadioAccessTechnology;
 
-  // Send an event to React Native with the new RAT.
-  NSDictionary *eventData = @{@"RAT": CTGetRadioAccessTechnologyString(RAT)};
-  [RCTDeviceEventEmitter sendDeviceEventWithName:@"cellularConnectivityDidChange" body:eventData];
+      if(currentRadioAccessTechnology == nil){
+            // Airplane enabled
+            [self sendDeviceEventWithName:@"airplaneModeChanged" body:@YES];
+      }else{
+            // Airplane disabled
+            [self sendDeviceEventWithName:@"airplaneModeChanged" body:@NO];
+      }
 }
 
 @end
+
