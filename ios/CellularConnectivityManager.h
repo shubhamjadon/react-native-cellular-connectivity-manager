@@ -6,9 +6,8 @@
 #else
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
-@interface CellularConnectivityManager : RCTEventEmitter <RCTBridgeModule, CTTelephonyNetworkInfoDelegate>
+@interface CellularConnectivityManager : RCTEventEmitter <RCTBridgeModule>
 #endif
 
 @end
