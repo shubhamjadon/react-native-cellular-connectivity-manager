@@ -20,6 +20,15 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 @ReactModule(name = CellularConnectivityManagerModule.NAME)
 public class CellularConnectivityManagerModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
   public static final String NAME = "CellularConnectivityManager";
@@ -36,6 +45,8 @@ public class CellularConnectivityManagerModule extends ReactContextBaseJavaModul
   private boolean airplaneModeListenerAlreadyRegistered = false;
   private static final String AIRPLANE_MODE_CHANGE_EVENT = "EventAirplaneChange";
 
+  OkHttpClient client;
+
 
   public CellularConnectivityManagerModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -43,6 +54,9 @@ public class CellularConnectivityManagerModule extends ReactContextBaseJavaModul
     reactContext.addLifecycleEventListener(this);
 
     appContext = reactContext;
+    
+    // client = new OkHttpClient();
+
     mConnectivityManager =
       (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
     mNetworkCallback = new ConnectivityNetworkCallback();
@@ -130,11 +144,27 @@ public class CellularConnectivityManagerModule extends ReactContextBaseJavaModul
 
   @Override
   public void onHostPause() {}
-  
+
   @Override
   public void onHostDestroy() {
     resetDataFlowToDefault();
     unregisterAirplaneModeListener();
+  }
+
+  @ReactMethod
+  public void callAPI() throws IOException {
+   OkHttpClient client = new OkHttpClient();
+
+      Request request = new Request.Builder()
+        .url(URI.create("https://jokes-by-api-ninjas.p.rapidapi.com/v1/jokes").toURL())
+        .build();
+
+      try (Response response = client.newCall(request).execute()) {
+        Log.d("CUSTOM_LOGGER", "API RESPONSE");
+//        return response.body().string();
+      } catch (Exception e) {
+        Log.d("CUSTOM_LOGGER", "API ERROR1");
+      }
   }
 
   private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {
@@ -143,6 +173,14 @@ public class CellularConnectivityManagerModule extends ReactContextBaseJavaModul
       super.onAvailable(network);
       sendEvent(MOBILE_DATA_CHANGE_EVENT, true);
       mConnectivityManager.bindProcessToNetwork(network);
+      try {
+        URL ur = new URL("https://jsonplaceholder.typicode.com");
+        network.openConnection(ur);
+      } catch (MalformedURLException e) {
+        Log.d("CUSTOM_LOGGER", "ERROR1");
+      } catch (IOException e) {
+        Log.d("CUSTOM_LOGGER", "ERROR2");
+      }
     }
 
     @Override

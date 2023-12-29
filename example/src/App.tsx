@@ -12,6 +12,7 @@ import {
   AIRPLANE_MODE_EVENT,
   MOBILE_DATA_STATUS_EVENT,
   MobileDataStatus,
+  callAPI,
   registerAirplaneModeListener,
   switchToCellularInternet,
   switchToDefaultInternet,
@@ -56,16 +57,17 @@ export default function App() {
   };
   const callApi2 = () => {
     console.log('Api called');
-    fetch('https://jsonplaceholder.typicode.com/todos/2')
-      .then((response) => response.json())
-      .then((json) => {
-        console.log('api result2: ', json);
-        ToastAndroid.show('RESPNOSE2', 1000);
-      })
-      .catch((err) => {
-        console.log(err);
-        ToastAndroid.show('ERROR2', 1000);
-      });
+    callAPI();
+    // fetch('https://jsonplaceholder.typicode.com/todos/2')
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     console.log('api result2: ', json);
+    //     ToastAndroid.show('RESPNOSE2', 1000);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     ToastAndroid.show('ERROR2', 1000);
+    //   });
   };
 
   return (

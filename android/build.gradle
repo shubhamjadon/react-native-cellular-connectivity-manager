@@ -89,5 +89,10 @@ dependencies {
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
+  implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+
+  // define any required OkHttp artifacts without version
+  implementation("com.squareup.okhttp3:okhttp")
+  implementation("com.squareup.okhttp3:logging-interceptor")
 }
 

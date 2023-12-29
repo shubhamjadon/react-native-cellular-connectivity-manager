@@ -39,4 +39,8 @@ export function unregisterAirplaneModeListener() {
   CellularConnectivityManager?.unregisterAirplaneModeListener?.();
 }
 
+export function callAPI() {
+  CellularConnectivityManager?.callAPI?.();
+}
+
 export const AIRPLANE_MODE_EVENT = 'EventAirplaneChange';
