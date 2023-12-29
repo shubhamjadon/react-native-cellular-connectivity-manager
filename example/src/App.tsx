@@ -1,6 +1,13 @@
 import React, { useEffect } from 'react';
 
-import { StyleSheet, View, Text, Pressable, ToastAndroid } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  ToastAndroid,
+  Alert,
+} from 'react-native';
 import {
   AIRPLANE_MODE_EVENT,
   MOBILE_DATA_STATUS_EVENT,
@@ -33,6 +40,33 @@ export default function App() {
       airplaneModeListener.remove();
     };
   }, []);
+
+  const callApi1 = () => {
+    console.log('Api called');
+    fetch('https://jsonplaceholder.typicode.com/todos/1')
+      .then((response) => response.json())
+      .then((json) => {
+        console.log('api result1: ', json);
+        ToastAndroid.show('RESPNOSE1', 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+        ToastAndroid.show('ERROR1', 1000);
+      });
+  };
+  const callApi2 = () => {
+    console.log('Api called');
+    fetch('https://jsonplaceholder.typicode.com/todos/2')
+      .then((response) => response.json())
+      .then((json) => {
+        console.log('api result2: ', json);
+        ToastAndroid.show('RESPNOSE2', 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+        ToastAndroid.show('ERROR2', 1000);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -76,6 +110,27 @@ export default function App() {
           ]}
         >
           <Text style={styles.buttonText}>UnregisterAirplaneListener</Text>
+        </Pressable>
+      </View>
+      <View style={styles.row}>
+        <Pressable
+          onPress={callApi1}
+          style={({ pressed }) => [
+            styles.button,
+            { opacity: pressed ? 0.5 : 1 },
+          ]}
+        >
+          <Text style={styles.buttonText}>Call api 1</Text>
+        </Pressable>
+        <Pressable
+          onPress={callApi2}
+          style={({ pressed }) => [
+            styles.button,
+            styles.blackButton,
+            { opacity: pressed ? 0.5 : 1 },
+          ]}
+        >
+          <Text style={styles.buttonText}>Call api 2</Text>
         </Pressable>
       </View>
     </View>
